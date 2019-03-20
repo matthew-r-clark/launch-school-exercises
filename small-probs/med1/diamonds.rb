@@ -21,7 +21,7 @@ def diamond(n, outline_only = false)
     else
       count -= 2
     end
-    break if count == 0
+    break if count <= 0
   end
 
   diamond = outline(diamond) if outline_only
@@ -40,6 +40,6 @@ end
 
 diamond(1)
 diamond(5, true)
-diamond(9)
+diamond(13)
 diamond(13, true)
 diamond(10)
