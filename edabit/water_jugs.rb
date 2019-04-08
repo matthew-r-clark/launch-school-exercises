@@ -17,8 +17,14 @@
 
 require 'pry'
 
+def jugs_dup(jugs)
+  copy = {}
+  jugs.each {|key, val| copy[key] = val.dup}
+  copy
+end
+
 def initialize_jugs(capacities, goal_states)
-  jugs = [{},{},{}]
+  jugs = {0=>{}, 1=>{}, 2=>{}, operations: 0}
 
   capacities.each_with_index do |element, index|
     jugs[index][:capacity] = element
@@ -29,75 +35,75 @@ def initialize_jugs(capacities, goal_states)
   jugs # {capacity => current water}
 end
 
-def empty_jug!(jug)
-  jug[:water] = 0
+def empty_jug!(jugs, jug)
+  # puts "emptying jug #{jug}"
+  jugs[jug][:water] = 0
+  jugs[:operations] += 1
+  jugs
 end
 
-def fill_jug!(jug)
-  jug[:water] = jug[:capacity]
+def fill_jug!(jugs, jug)
+  # puts "filling jug #{jug}"
+  jugs[jug][:water] = jug[:capacity]
+  jugs[:operations] += 1
+  jugs
 end
 
-def create_pathways()
-  options = {0=>[1,2], 1=>[0,2], 2=>[0,1]}
-  pathways = []
-
-
-
-  pathways
-end
-
-def find_solution(jug_capacities, goal_states)
-  jugs = {}
-  attempts = []
-  num_ops = 0
-
-  pathways = create_pathways
-
-  pathways.each do |pathway|
-    jugs = initialize_jugs(jug_capacities, goal_states)
-    pouring = 2
-
-    pathway.each do |receiving|
-      pour_jug!(jugs[pouring], jugs[receiving])
-      num_ops += 1
-      pouring = receiving
-      break if finished?(jugs)
-    end
-
-    attempts << num_ops
-    num_ops = 0
-  end
-
-  finished?(jugs) ? attempts.min : "No solution."
-end
-
-def pour_jug!(giving, receiving)
+def pour_jug!(jugs, giving, receiving)
+  # puts "pouring jug #{giving} into jug #{receiving}"
+  giving, receiving = jugs[giving], jugs[receiving]
   max_fill = receiving[:capacity] - receiving[:water]
   if giving[:water] > max_fill
     giving[:water] -= max_fill
     receiving[:water] += max_fill
-    "reciving jug filled to max"
   elsif giving[:water] <= max_fill
     receiving[:water] = giving[:water]
     giving[:water] = 0
-    "giving jug completely empty"
   end
+  jugs[:operations] += 1
+  jugs
 end
 
 def finished?(jugs)
-  jugs.each { |jug| return false if jug[:water] != jug[:goal] }
+  jugs.select {|key, val| (0..2).include?(key)}
+  .each { |key, jug| return false if jug[:water] != jug[:goal] }
   true
+end
+
+def solve(jugs)
+  return jugs[:operations] if finished?(jugs)
+  return nil if jugs[:operations] >= 10
+
+  puts "Jug1: #{jugs[0][:water]}/#{jugs[0][:goal]}, Jug2: #{jugs[1][:water]}/#{jugs[1][:goal]}, Jug3: #{jugs[2][:water]}/#{jugs[2][:goal]}, Ops: #{jugs[:operations]}"
+
+  paths = [
+    solve(pour_jug!(jugs_dup(jugs), 0, 1),), # pour from 0 to 1
+    # solve(pour_jug!(jugs_dup(jugs), 0, 2),), # pour from 0 to 2
+    # solve(pour_jug!(jugs_dup(jugs), 1, 0),), # pour from 1 to 0
+    # solve(pour_jug!(jugs_dup(jugs), 1, 2),), # pour from 1 to 2
+    solve(pour_jug!(jugs_dup(jugs), 2, 0),), # pour from 2 to 0
+    # solve(pour_jug!(jugs_dup(jugs), 2, 1),) # pour from 2 to 1
+    # solve(fill_jug!(jugs_dup(jugs), 0)) # fill 0
+    # solve(fill_jug!(jugs_dup(jugs), 1)) # fill 1
+    # solve(fill_jug!(jugs_dup(jugs), 2)) # fill 2
+    # solve(empty_jug!(jugs_dup(jugs), 0)) # empty 0
+    # solve(empty_jug!(jugs_dup(jugs), 1)) # empty 1
+    # solve(empty_jug!(jugs_dup(jugs), 2)) # empty 2
+].flatten.uniq.compact
+
 end
 
 def waterjug(jug_capacities, goal_states)
   return "No solution." if jug_capacities[2] != goal_states.reduce(:+)
+  jugs = initialize_jugs(jug_capacities, goal_states)
 
-  # find_solution(jug_capacities, goal_states)
-  create_pathways
+  solution = solve(jugs)
+
+  # solution.empty? ? "No solution." : solution.min
 end
 
-# p waterjug([3, 5, 8], [0, 3, 5]) #== 2
-p waterjug([1, 3, 4],  [0, 2, 2]) #== 3
-p waterjug([8, 17, 20], [0, 10, 10]) #== 9
+p waterjug([3, 5, 8], [0, 3, 5]) #== 2
+# p waterjug([1, 3, 4],  [0, 2, 2]) #== 3
+# p waterjug([8, 17, 20], [0, 10, 10]) #== 9
 # p waterjug([4, 17, 22], [2, 5, 15]) #== "No solution."
 # p waterjug([3, 5, 8], [0, 0, 9]) #== "No solution."
