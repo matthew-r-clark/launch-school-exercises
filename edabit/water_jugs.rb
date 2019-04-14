@@ -44,7 +44,7 @@ end
 
 def fill_jug!(jugs, jug)
   # puts "filling jug #{jug}"
-  jugs[jug][:water] = jug[:capacity]
+  jugs[jug][:water] = jugs[jug][:capacity]
   jugs[:operations] += 1
   jugs
 end
@@ -70,26 +70,58 @@ def finished?(jugs)
   true
 end
 
-def solve(jugs)
+def solve(jugs, last_op=nil)
   return jugs[:operations] if finished?(jugs)
   return nil if jugs[:operations] >= 10
 
   puts "Jug1: #{jugs[0][:water]}/#{jugs[0][:goal]}, Jug2: #{jugs[1][:water]}/#{jugs[1][:goal]}, Jug3: #{jugs[2][:water]}/#{jugs[2][:goal]}, Ops: #{jugs[:operations]}"
+  a=b=c=d=e=f=g=h=i=j=k=l=nil
 
-  paths = [
-    solve(pour_jug!(jugs_dup(jugs), 0, 1),), # pour from 0 to 1
-    # solve(pour_jug!(jugs_dup(jugs), 0, 2),), # pour from 0 to 2
-    # solve(pour_jug!(jugs_dup(jugs), 1, 0),), # pour from 1 to 0
-    # solve(pour_jug!(jugs_dup(jugs), 1, 2),), # pour from 1 to 2
-    solve(pour_jug!(jugs_dup(jugs), 2, 0),), # pour from 2 to 0
-    # solve(pour_jug!(jugs_dup(jugs), 2, 1),) # pour from 2 to 1
-    # solve(fill_jug!(jugs_dup(jugs), 0)) # fill 0
-    # solve(fill_jug!(jugs_dup(jugs), 1)) # fill 1
-    # solve(fill_jug!(jugs_dup(jugs), 2)) # fill 2
-    # solve(empty_jug!(jugs_dup(jugs), 0)) # empty 0
-    # solve(empty_jug!(jugs_dup(jugs), 1)) # empty 1
-    # solve(empty_jug!(jugs_dup(jugs), 2)) # empty 2
-].flatten.uniq.compact
+  if jugs[0][:water] > 0
+    a = solve(empty_jug!(jugs_dup(jugs), 0)) # empty 0
+
+    if last_op != "01"
+      b = solve(pour_jug!(jugs_dup(jugs), 0, 1), "01") # pour from 0 to 1
+    end
+    if last_op != "02" 
+      c = solve(pour_jug!(jugs_dup(jugs), 0, 2), "02") # pour from 0 to 2
+    end
+  end
+  if jugs[1][:water] > 0
+    d = solve(empty_jug!(jugs_dup(jugs), 1)) # empty 1
+
+    if last_op != "10"
+      e = solve(pour_jug!(jugs_dup(jugs), 1, 0), "10") # pour from 1 to 0
+    end
+    if last_op != "12"
+      f = solve(pour_jug!(jugs_dup(jugs), 1, 2), "12") # pour from 1 to 2
+    end
+  end
+  if jugs[2][:water] > 0
+    g = solve(empty_jug!(jugs_dup(jugs), 2)) # empty 2
+
+    if last_op != "20"
+      h = solve(pour_jug!(jugs_dup(jugs), 2, 0), "20") # pour from 2 to 0
+    end
+    if last_op != "21"
+      i = solve(pour_jug!(jugs_dup(jugs), 2, 1), "21") # pour from 2 to 1
+    end
+  end
+  
+  if jugs[0][:water] < jugs[0][:capacity]
+    j = solve(fill_jug!(jugs_dup(jugs), 0)) # fill 0
+  end
+  if jugs[1][:water] < jugs[1][:capacity]
+    k = solve(fill_jug!(jugs_dup(jugs), 1)) # fill 1
+  end
+  if jugs[2][:water] < jugs[2][:capacity]
+    l = solve(fill_jug!(jugs_dup(jugs), 2)) # fill 2
+  end
+  # solve(empty_jug!(jugs_dup(jugs), 0)) # empty 0
+  # solve(empty_jug!(jugs_dup(jugs), 1)) # empty 1
+  # solve(empty_jug!(jugs_dup(jugs), 2)) # empty 2
+
+  paths = [a, b, c, d, e, f, g, h, i, j, k, l].flatten.uniq.compact
 
 end
 
@@ -99,7 +131,7 @@ def waterjug(jug_capacities, goal_states)
 
   solution = solve(jugs)
 
-  # solution.empty? ? "No solution." : solution.min
+  solution.empty? ? "No solution." : solution.min
 end
 
 p waterjug([3, 5, 8], [0, 3, 5]) #== 2
