@@ -4,14 +4,23 @@
 
 # shift the first element off and append it back to the end of the Array.
 
-def rotate_array(arr)
-  arr = arr.dup
-  mover = arr.shift
-  arr << mover
-  arr
+# 1. duplicate array then use mutating methods
+# def rotate_array(arr)
+#   arr = arr.dup
+#   mover = arr.shift
+#   arr << mover
+#   arr
+# end
 
-  # LS solution:
-  # arr[1..-1] + [arr[0]]
+# 2. LS example, Array#slice
+# def rotate_array(arr)
+#   arr[1..-1] + [arr[0]] # must include brackets around 'arr[0]'
+# end
+
+# 3. from Brad Graham, Array#drop + Arr#<<
+# Array#drop returns a new array without the first n elements
+def rotate_array(arr)
+  arr.drop(1) << arr.first
 end
 
 def rotate_string(str)
@@ -38,3 +47,9 @@ p rotate_string("wMatthe") == "Matthew"
 puts "\nInteger tests:"
 p rotate_integer(12345) == 23451
 p rotate_integer(122) == 221
+
+puts "\nNon-mutating tests:"
+array = [1,2,3,4,5]
+new_array = rotate_array(array)
+p new_array == [2,3,4,5,1]
+p array.object_id != new_array.object_id
