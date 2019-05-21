@@ -17,7 +17,7 @@
 # Sort array.
 # Return :invalid if two shortest sides are not greater than longest
 # Return :equilateral if all three elements are equal
-# Return :isosceles if two largest sides are equal
+# Return :isosceles if two sides are equal
 # Otherwise return :scalene
 # -----
 
@@ -25,12 +25,13 @@ def triangle(*sides)
   sides.sort!
   return :invalid if sides[0..1].reduce(:+) <= sides[2]
   return :equilateral if sides.uniq.count == 1
-  return :isosceles if sides[1..2].uniq.count == 1
+  return :isosceles if sides.uniq.count == 2
   :scalene
 end
 
 p triangle(3, 3, 3) == :equilateral
 p triangle(3, 3, 1.5) == :isosceles
+p triangle(2, 3, 2) == :isosceles
 p triangle(3, 4, 5) == :scalene
 p triangle(0, 3, 3) == :invalid
 p triangle(3, 1, 1) == :invalid

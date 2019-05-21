@@ -1,7 +1,3 @@
-def add_denominators(denominators)
-  denominators.reduce(0) {|sum, denom| sum + Rational(1, denom)}
-end
-
 def egyptian(rat)
   denominators = []
 
@@ -16,6 +12,10 @@ def egyptian(rat)
   end
 
   denominators
+end
+
+def add_denominators(denominators)
+  denominators.reduce(0) {|sum, denom| sum + Rational(1, denom)}
 end
 
 def unegyptian(denominators)
