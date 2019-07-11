@@ -19,13 +19,9 @@ class Meetup
     date = Date.new(year, month, START_DATE[schedule])
     
     7.times do
-      return date if date.send(add_question_mark_to_sym(weekday))
+      return date if date.send("#{weekday}?".to_sym)
       date = date.next
     end
-  end
-
-  def add_question_mark_to_sym(weekday)
-    (weekday.to_s + "?").to_sym
   end
 
   private
