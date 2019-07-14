@@ -11,9 +11,3 @@ class Series
     @digits.each_cons(n).to_a
   end
 end
-
-series = Series.new('01234')
-p series.slices(1)
-p series.slices(3)
-p series.slices(5)
-p series.slices(7)

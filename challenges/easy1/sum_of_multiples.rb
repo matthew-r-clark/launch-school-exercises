@@ -6,7 +6,7 @@ class SumOfMultiples
   def self.to(limit, nums = [3, 5])
     (0...limit)
       .select do |digit|
-        nums.any? {|num| digit % num == 0}
+        nums.any? { |num| digit % num == 0 }
       end
       .reduce(:+)
   end
@@ -15,6 +15,3 @@ class SumOfMultiples
     self.class.to(limit, @nums)
   end
 end
-
-# p SumOfMultiples.new(3, 5).to(100)
-# p SumOfMultiples.new.to(100)

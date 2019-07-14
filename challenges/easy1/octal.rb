@@ -1,5 +1,6 @@
 # 1) Start the decimal result at 0.
-# 2) Remove the most significant octal digit (leftmost) and add it to the result.
+# 2) Remove the most significant octal digit (leftmost)
+#    and add it to the result.
 # 3) If all octal digits have been removed, stop.
 # 4) Otherwise, multiply the result by 8.
 # 5) Go to step 2.

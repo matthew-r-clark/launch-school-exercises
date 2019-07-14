@@ -7,6 +7,6 @@ class PerfectNumber
   end
 
   def self.sum_of_factors(num)
-    (1...num).select {|n| n if num % n == 0}.reduce(:+)
+    (1...num).select { |n| n if num % n == 0 }.reduce(:+)
   end
 end
