@@ -45,16 +45,16 @@ class OCR
       index = -3
       digits.map! do |digit|
         index += 3
-        digit += line[index..index+2] + "\n"
+        digit + line[index..index + 2] + "\n"
       end
     end
 
-    digits.map {|digit| convert_individual(digit)}.join
+    digits.map { |digit| convert_individual(digit) }.join
   end
 
   def convert_multiple_lines
     @ocr.split("\n\n")
-      .map {|number| convert_multiple_digits(number)}
-      .join(",")
+        .map { |number| convert_multiple_digits(number) }
+        .join(",")
   end
 end
