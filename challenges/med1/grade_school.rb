@@ -25,17 +25,3 @@ class School
     @grades
   end
 end
-
-# Methods:
-# add # sort after adding grades?
-# to_h # sort when getting grades?
-# grade
-
-school = School.new
-school.add("Matt", 100)
-p school
-school.add("Dani", 100)
-p school
-school.add("Ginger", 95)
-p school.to_h
-p school.grade(100)

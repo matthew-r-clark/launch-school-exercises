@@ -2,10 +2,10 @@
 # initialize prime list to [2]
 # initialize current number to 3
 # while primes list length is less than n:
-#   add current number to primes if none of the numbers in primes list are factors
+#   add current number to primes if none of the numbers
+#      in primes list are factors
 #   add 2 to current
 # after while loop, return last element in primes list.
-
 
 # added more tests to testing suite to test speed of calculating
 # several large prime numbers. keeping the primes list stored in
@@ -16,7 +16,7 @@ class Prime
 
   def self.nth(n)
     raise ArgumentError if n == 0
-    return @@primes[n-1] if @@primes.size >= n
+    return @@primes[n - 1] if @@primes.size >= n
 
     current = @@primes.last + 1
     current += 1 if current.even?

@@ -17,7 +17,7 @@ class Meetup
 
   def day(weekday, schedule)
     date = Date.new(year, month, START_DATE[schedule])
-    
+
     7.times do
       return date if date.send("#{weekday}?".to_sym)
       date = date.next

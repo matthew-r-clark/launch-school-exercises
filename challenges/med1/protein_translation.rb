@@ -8,13 +8,13 @@ class Translation
   }
 
   def self.of_codon(codon)
-    AMINOS.fetch(codon.to_sym) {fail InvalidCodonError}
+    AMINOS.fetch(codon.to_sym) { raise InvalidCodonError }
   end
 
   def self.of_rna(strand)
     strand.scan(/.../)
-      .take_while {|codon| of_codon(codon) != "STOP"}
-      .map {|codon| of_codon(codon)}
+          .take_while { |codon| of_codon(codon) != "STOP" }
+          .map { |codon| of_codon(codon) }
   end
 end
 

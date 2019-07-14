@@ -11,7 +11,7 @@ class Clock
   end
 
   def to_s
-    "#{h_format}:#{m_format}"
+    format("%02d:%02d", hours, minutes)
   end
 
   def +(m_input)
@@ -39,15 +39,5 @@ class Clock
 
   def ==(other)
     hours == other.hours && minutes == other.minutes
-  end
-
-  private
-
-  def h_format
-    sprintf("%02d", hours)
-  end
-
-  def m_format
-    sprintf("%02d", minutes)
   end
 end
