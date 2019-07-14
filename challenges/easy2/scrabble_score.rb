@@ -13,7 +13,7 @@ class Scrabble
   end
 
   def valid?
-    String === @word
+    @word.instance_of?(String)
   end
 
   def letter_value(char)
@@ -33,5 +33,3 @@ class Scrabble
     Scrabble.new(word).score
   end
 end
-
-# p Scrabble.new('he').score
